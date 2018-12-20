@@ -15,7 +15,7 @@ void test() {
 	for(int i = 0; i < 10000; ++i) {
 			cf.compute((block*)c.bits, (block*)a.bits, (block*)b.bits);
 	}
-	cout << time_from(start)<<" "<<party<<" "<<c.reveal<string>(BOB)<<endl;
+	cout << time_from(start)<<" "<<party<<" "<<c.reveal_string(BOB)<<endl;
 
 }
 int main(int argc, char** argv) {

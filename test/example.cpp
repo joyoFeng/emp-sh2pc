@@ -6,9 +6,9 @@ void test_millionare(int party, int number) {
 	Integer a(32, number, ALICE);
 	Integer b(32, number, BOB);
 
-	cout << "ALICE Input:\t"<<a.reveal<int>()<<endl;
-	cout << "BOB Input:\t"<<b.reveal<int>()<<endl;
-	cout << "ALICE larger?\t"<< (a>b).reveal<bool>()<<endl;
+	cout << "ALICE Input:\t"<<a.reveal()<<endl;
+	cout << "BOB Input:\t"<<b.reveal()<<endl;
+	cout << "ALICE larger?\t"<< (a>b).reveal()<<endl;
 }
 
 void test_sort(int party) {
@@ -28,7 +28,7 @@ void test_sort(int party) {
 
 	sort(A, size);
 	for(int i = 0; i < size; ++i)
-		cout << A[i].reveal<string>()<<endl;
+		cout << A[i].reveal_string()<<endl;
 }
 
 int main(int argc, char** argv) {
