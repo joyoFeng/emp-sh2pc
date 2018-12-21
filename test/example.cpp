@@ -1,6 +1,12 @@
 #include "emp-sh2pc/emp-sh2pc.h"
+
+#ifdef OT_NP_USE_MIRACL
+#include "emp-tool/utils/sm2_params.h"
+#endif//
+
 using namespace emp;
 using namespace std;
+
 
 void test_millionare(int party, int number) {
 	Integer a(32, number, ALICE);
@@ -34,6 +40,10 @@ void test_sort(int party) {
 int main(int argc, char** argv) {
 	int port, party;
 	parse_party_and_port(argv, &party, &port);
+
+#ifdef OT_NP_USE_MIRACL
+	SM2_Init();
+#endif//
 	NetIO * io = new NetIO(party==ALICE ? nullptr : "127.0.0.1", port);
 
 	setup_semi_honest(io, party);

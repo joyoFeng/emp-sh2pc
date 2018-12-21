@@ -29,20 +29,30 @@ if(WIN32)
     # for windows socket
     link_libraries(Ws2_32)
 else()
+    find_package(GMP)
+
     link_directories(${CMAKE_BINARY_DIR}/lib)
+	include_directories(${GMP_INCLUDE_DIR})
+	link_libraries(${GMP_LIBRARIES})
 endif()
 
 # protobuf dependencies
 if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
-    SET(LIB_PROTOBUF protobufd)
+	if (WIN32)
+		SET(LIB_PROTOBUF libprotobufd)
+	else()
+		SET(LIB_PROTOBUF protobufd)
+	endif()
 else()
-    SET(LIB_PROTOBUF protobuf)
+	if (WIN32)
+		SET(LIB_PROTOBUF libprotobuf)
+	else()
+		SET(LIB_PROTOBUF protobuf)
+	endif()
 endif()
-
 
 if(NOT OT_NP_USE_MIRACL)
 	message(STATUS "Use RELIC base libraries !")
-	find_package(GMP)	
 	find_package(relic) # compile relic should refer to emp-readme github repository (https://github.com/emp-toolkit/emp-readme)
 	#set(RELIC_LIBRARIES relic_s)
 	include_directories(${RELIC_INCLUDE_DIR})
@@ -51,9 +61,10 @@ else()
 	message(STATUS "Use MIRACL base libraries !")
 	ADD_DEFINITIONS(-DOT_NP_USE_MIRACL=1)
 	include_directories(../miracl/include)
+	link_libraries(miracl)
 endif()
 
-# emp-tool include
+# emp-tool, emp-ot include
 include_directories(${CURRENT_DIR}/../emp-tool)
 include_directories(${CURRENT_DIR}/../emp-tool/include)
 include_directories(${CURRENT_DIR}/../emp-ot)
@@ -65,7 +76,7 @@ install(DIRECTORY emp-sh2pc DESTINATION include/)
 
 # Test cases
 macro (emp_sh2pc_test _name)
-	message(STATUS "emp sh2pc test: ${_name}")
+	message(STATUS "emp ot test: ${_name}")
 
 	#aux_source_directory(./testutils EXE_SRC_LIST)
     add_executable(emp_sh2pc_${_name} ./test/${_name}.cpp)
@@ -77,7 +88,11 @@ macro (emp_sh2pc_test _name)
 
 		target_link_libraries(emp_sh2pc_${_name} ${OPENSSL_LIBRARIES} ${RELIC_LIBRARIES} ${GMP_LIBRARIES} ${LIB_PROTOBUF} emp-tool)
 	else()
-		target_link_libraries(emp_sh2pc_${_name} ${OPENSSL_LIBRARIES} ${LIB_PROTOBUF} emp-tool)
+		if(NOT WIN32)
+			target_link_libraries(emp_sh2pc_${_name} ${OPENSSL_LIBRARIES} ${GMP_LIBRARIES} ${LIB_PROTOBUF} emp-tool)
+		else()	
+			target_link_libraries(emp_sh2pc_${_name} ${OPENSSL_LIBRARIES} ${LIB_PROTOBUF} emp-tool_static)
+		endif()
 	endif()
 endmacro()
 
