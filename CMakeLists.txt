@@ -51,7 +51,7 @@ else()
 	endif()
 endif()
 
-if(WIN32 AND OT_NP_USE_MIRACL)
+if(OT_NP_USE_MIRACL)
 	message(STATUS "Use MIRACL base libraries !")
 	ADD_DEFINITIONS(-DOT_NP_USE_MIRACL=1)
 	include_directories(../miracl/include)

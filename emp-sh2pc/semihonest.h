@@ -3,9 +3,22 @@
 #include "emp-sh2pc/semihonest_gen.h"
 #include "emp-sh2pc/semihonest_eva.h"
 
+#ifdef OT_NP_USE_MIRACL
+#include "emp-tool/utils/sm2_params.h"
+#else
+#include "emp-tool/utils/utils_ec.h"
+#endif//
+
 namespace emp {
 template<typename IO>
 inline void setup_semi_honest(IO* io, int party) {
+
+#ifdef OT_NP_USE_MIRACL
+	SM2_Init();
+#else
+	initialize_relic();
+#endif//
+
 	if(party == ALICE) {
 		HalfGateGen<IO> * t = new HalfGateGen<IO>(io);
 		CircuitExecutionProxy::circ_exec.setup(t);
